@@ -1,70 +1,209 @@
-# Getting Started with Create React App
+# 🔧 AutoMax - Taller Mecánico Website
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Una aplicación web moderna y responsiva para un taller mecánico construida con React y Bootstrap.
 
-## Available Scripts
+## 🚀 Características
 
-In the project directory, you can run:
+### 📱 Diseño Responsivo
+- Completamente adaptado para móviles, tablets y escritorio
+- Utiliza Bootstrap 5 para un diseño moderno y profesional
+- Navegación intuitiva con menú colapsable
 
-### `npm start`
+### 🛠️ Componentes Principales
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+#### 1. **Navegación (Navbar)**
+- Menú responsive con logo del taller
+- Navegación entre secciones
+- Enlaces a registro y contacto
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+#### 2. **Página de Inicio (Home)**
+- Sección hero atractiva
+- Estadísticas del taller
+- Características destacadas
+- Llamadas a la acción
 
-### `npm test`
+#### 3. **Servicios (Services)**
+- Catálogo completo de servicios mecánicos
+- Precios y duración de cada servicio
+- Modal para solicitar servicios
+- Formulario de contacto integrado
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+#### 4. **Inventario (Inventory)**
+- Gestión de repuestos y accesorios
+- Filtros por categoría
+- Búsqueda de productos
+- Control de stock
 
-### `npm run build`
+#### 5. **Citas (Appointments)**
+- Sistema de gestión de citas
+- Formulario para nuevas citas
+- Tabla de citas existentes
+- Estados de citas (Confirmada, Pendiente, Completada)
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+#### 6. **Registro de Clientes (CustomerRegistration)**
+- Formulario completo de registro
+- Información del vehículo
+- Contacto de emergencia
+- Validación de datos
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+#### 7. **Contacto (Contact)**
+- Formulario de contacto
+- Información del taller
+- Mapa y ubicación
+- Horarios de atención
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## 🛠️ Tecnologías Utilizadas
 
-### `npm run eject`
+- **React 18** - Biblioteca de JavaScript para interfaces de usuario
+- **Bootstrap 5** - Framework CSS para diseño responsivo
+- **React Bootstrap** - Componentes Bootstrap para React
+- **CSS3** - Estilos personalizados
+- **JavaScript ES6+** - Funcionalidades interactivas
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+## 📋 Requisitos del Sistema
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+- Node.js (versión 14 o superior)
+- npm (versión 6 o superior)
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+## 🚀 Instalación y Configuración
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+1. **Clonar el repositorio:**
+   ```bash
+   git clone [url-del-repositorio]
+   cd mecanica-website
+   ```
 
-## Learn More
+2. **Instalar dependencias:**
+   ```bash
+   npm install
+   ```
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+3. **Instalar Bootstrap y React Bootstrap:**
+   ```bash
+   npm install react-bootstrap bootstrap
+   ```
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+4. **Ejecutar la aplicación:**
+   ```bash
+   npm start
+   ```
 
-### Code Splitting
+5. **Abrir en el navegador:**
+   ```
+   http://localhost:3000
+   ```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+## 📁 Estructura del Proyecto
 
-### Analyzing the Bundle Size
+```
+mecanica-website/
+├── public/
+│   ├── index.html
+│   ├── favicon.ico
+│   └── manifest.json
+├── src/
+│   ├── components/
+│   │   ├── Navbar.js          # Navegación principal
+│   │   ├── Home.js            # Página de inicio
+│   │   ├── Services.js        # Servicios mecánicos
+│   │   ├── Inventory.js       # Inventario de repuestos
+│   │   ├── Appointments.js    # Sistema de citas
+│   │   ├── CustomerRegistration.js # Registro de clientes
+│   │   └── Contact.js         # Información de contacto
+│   ├── App.js                 # Componente principal
+│   ├── App.css               # Estilos personalizados
+│   ├── index.js              # Punto de entrada
+│   └── index.css             # Estilos globales
+├── package.json
+└── README.md
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+## 🎨 Características de Diseño
 
-### Making a Progressive Web App
+### Paleta de Colores
+- **Azul Principal:** #007bff (Bootstrap primary)
+- **Azul Oscuro:** #0056b3 (Hover states)
+- **Gris Claro:** #f8f9fa (Background)
+- **Blanco:** #ffffff (Cards y contenido)
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+### Tipografía
+- **Fuente Principal:** Bootstrap default (system fonts)
+- **Tamaños:** Responsive typography
+- **Pesos:** Regular (400), Semi-bold (600), Bold (700)
 
-### Advanced Configuration
+### Componentes
+- **Cards:** Bordes redondeados, sombras sutiles
+- **Botones:** Estados hover y focus
+- **Formularios:** Validación visual
+- **Modales:** Overlay y animaciones
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+## 📱 Responsive Design
 
-### Deployment
+### Breakpoints
+- **Mobile:** < 768px
+- **Tablet:** 768px - 991px
+- **Desktop:** > 992px
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+### Adaptaciones Móviles
+- Menú colapsable
+- Cards apiladas
+- Botones de tamaño táctil
+- Texto optimizado para lectura
 
-### `npm run build` fails to minify
+## 🔧 Funcionalidades JavaScript
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+### Estado de la Aplicación
+- Gestión de secciones activas
+- Formularios con validación
+- Modales interactivos
+- Filtros y búsquedas
+
+### Interactividad
+- Navegación entre secciones
+- Formularios dinámicos
+- Filtros de inventario
+- Gestión de citas
+
+## 🚀 Despliegue
+
+### Para Producción
+```bash
+npm run build
+```
+
+### En AWS EC2 (según documentación)
+1. Configurar servidor EC2
+2. Instalar Node.js y npm
+3. Clonar repositorio
+4. Instalar dependencias
+5. Ejecutar `npm start` con puerto 3000
+
+## 📞 Contacto del Taller
+
+- **Nombre:** Taller Mecánico AutoMax
+- **Dirección:** Carrera 15 # 45-67, Centro, Bogotá
+- **Teléfono:** (601) 234-5678
+- **Email:** info@automax.com
+- **Horarios:** Lunes a Viernes 8:00 AM - 6:00 PM
+
+## 📝 Notas de Desarrollo
+
+Este proyecto fue desarrollado siguiendo las mejores prácticas de:
+- **HTML5** semántico
+- **CSS3** moderno con Flexbox y Grid
+- **JavaScript ES6+** con React Hooks
+- **Bootstrap 5** para diseño responsivo
+- **React Bootstrap** para componentes
+
+## 🔮 Futuras Mejoras
+
+- [ ] Integración con base de datos
+- [ ] Sistema de autenticación
+- [ ] Panel de administración
+- [ ] Notificaciones en tiempo real
+- [ ] Integración con sistemas de pago
+- [ ] App móvil nativa
+
+---
+
+**Desarrollado con ❤️ para el Taller Mecánico AutoMax**
