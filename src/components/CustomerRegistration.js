@@ -295,3 +295,4 @@ const CustomerRegistration = () => {
 };
 
 export default CustomerRegistration;
+

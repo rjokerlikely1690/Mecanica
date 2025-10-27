@@ -93,3 +93,8 @@ npm install
 3. **Implementar autenticación** de usuarios
 4. **Agregar tests** automatizados
 5. **Configurar CI/CD** con GitHub Actions
+
+
+
+
+

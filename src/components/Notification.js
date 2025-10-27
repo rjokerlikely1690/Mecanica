@@ -19,3 +19,4 @@ const Notification = ({ show, message, variant, onClose }) => {
 };
 
 export default Notification;
+
