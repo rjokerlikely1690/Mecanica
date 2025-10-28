@@ -13,7 +13,7 @@ describe('Home Component', () => {
         onAddToCart={mockOnAddToCart}
       />
     );
-    const title = screen.getByText(/Bienvenido|Taller Mecánico|AutoMax/i);
+    const title = screen.getByText(/Taller Mecánico AutoMax/i);
     expect(title).toBeTruthy();
   });
 

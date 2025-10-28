@@ -4,8 +4,8 @@ import ShoppingCart from '../ShoppingCart';
 
 describe('ShoppingCart Component', () => {
   const mockCartItems = [
-    { id: 1, name: 'Cambio de aceite', price: 50000, quantity: 2 },
-    { id: 2, name: 'Alineación', price: 80000, quantity: 1 }
+    { id: 1, title: 'Cambio de aceite', price: 50000, quantity: 2, type: 'servicio' },
+    { id: 2, title: 'Alineación', price: 80000, quantity: 1, type: 'servicio' }
   ];
 
   const mockOnRemoveItem = () => {};
@@ -76,7 +76,7 @@ describe('ShoppingCart Component', () => {
         onCheckout={mockOnCheckout}
       />
     );
-    const checkoutButton = screen.getByText(/Proceder/i);
+    const checkoutButton = screen.getByText(/Programar Cita/i);
     expect(checkoutButton).toBeTruthy();
   });
 });
