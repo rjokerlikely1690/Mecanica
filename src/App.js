@@ -16,7 +16,6 @@ import WorkOrders from './components/WorkOrders';
 import Quotes from './components/Quotes';
 import VehicleHistory from './components/VehicleHistory';
 import Dashboard from './components/Dashboard';
-import CustomBreadcrumb from './components/Breadcrumb';
 import FloatingCart from './components/FloatingCart';
 import ServiceTypes from './components/ServiceTypes';
 import VehicleTypes from './components/VehicleTypes';
@@ -158,7 +157,6 @@ function App() {
           />
       <main>
         <Container fluid>
-          <CustomBreadcrumb currentSection={currentSection} />
           {renderSection()}
         </Container>
       </main>
