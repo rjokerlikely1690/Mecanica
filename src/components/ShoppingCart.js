@@ -128,8 +128,8 @@ const ShoppingCart = ({ cartItems, onRemoveItem, onClearCart, onCheckout, isFloa
               onClick={onCheckout}
               className="mb-2"
             >
-              <i className="fas fa-calendar-check me-2"></i>
-              Programar Cita
+              <i className="fas fa-credit-card me-2"></i>
+              Proceder al Pago
             </Button>
             <Button 
               variant="outline-secondary" 

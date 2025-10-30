@@ -3,6 +3,9 @@ import { Container, Row, Col, Card, Button, Form, Table, Badge, Modal, Alert } f
 
 const Appointments = () => {
   const [showForm, setShowForm] = useState(false);
+  const [showViewModal, setShowViewModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [selectedAppointment, setSelectedAppointment] = useState(null);
   const [cartItems, setCartItems] = useState([]);
   const [appointments, setAppointments] = useState([
     {
@@ -214,10 +217,37 @@ const Appointments = () => {
                       </td>
                       <td>{getStatusBadge(appointment.status)}</td>
                       <td>
-                        <Button variant="outline-primary" size="sm" className="me-2">
+                        <Button 
+                          variant="outline-primary" 
+                          size="sm" 
+                          className="me-2"
+                          onClick={() => {
+                            setSelectedAppointment(appointment);
+                            setShowViewModal(true);
+                          }}
+                        >
+                          <i className="fas fa-eye me-1"></i>
                           Ver
                         </Button>
-                        <Button variant="outline-success" size="sm">
+                        <Button 
+                          variant="outline-success" 
+                          size="sm"
+                          onClick={() => {
+                            setSelectedAppointment(appointment);
+                            setFormData({
+                              customer: appointment.customer,
+                              phone: appointment.phone,
+                              email: appointment.email || '',
+                              vehicle: appointment.vehicle,
+                              service: appointment.service,
+                              date: appointment.date,
+                              time: appointment.time,
+                              notes: appointment.notes || ''
+                            });
+                            setShowEditModal(true);
+                          }}
+                        >
+                          <i className="fas fa-edit me-1"></i>
                           Editar
                         </Button>
                       </td>
@@ -355,6 +385,305 @@ const Appointments = () => {
           </Button>
           <Button variant="primary" onClick={handleSubmit}>
             Programar Cita
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
+      {/* Modal para Ver Detalles */}
+      <Modal show={showViewModal} onHide={() => setShowViewModal(false)} size="lg">
+        <Modal.Header closeButton className="bg-primary text-white">
+          <Modal.Title>
+            <i className="fas fa-calendar-check me-2"></i>
+            Detalles de la Cita
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          {selectedAppointment && (
+            <div>
+              <Row className="mb-4">
+                <Col md={6}>
+                  <Card className="border-0 bg-light">
+                    <Card.Body>
+                      <h6 className="text-muted mb-3">
+                        <i className="fas fa-user text-primary me-2"></i>
+                        Información del Cliente
+                      </h6>
+                      <p className="mb-2">
+                        <strong>Nombre:</strong> {selectedAppointment.customer}
+                      </p>
+                      <p className="mb-2">
+                        <strong>Teléfono:</strong> {selectedAppointment.phone}
+                      </p>
+                      {selectedAppointment.email && (
+                        <p className="mb-0">
+                          <strong>Email:</strong> {selectedAppointment.email}
+                        </p>
+                      )}
+                    </Card.Body>
+                  </Card>
+                </Col>
+                <Col md={6}>
+                  <Card className="border-0 bg-light">
+                    <Card.Body>
+                      <h6 className="text-muted mb-3">
+                        <i className="fas fa-car text-success me-2"></i>
+                        Información del Vehículo
+                      </h6>
+                      <p className="mb-0">
+                        <strong>Vehículo:</strong> {selectedAppointment.vehicle}
+                      </p>
+                    </Card.Body>
+                  </Card>
+                </Col>
+              </Row>
+
+              <Row className="mb-4">
+                <Col md={12}>
+                  <Card className="border-0 bg-light">
+                    <Card.Body>
+                      <h6 className="text-muted mb-3">
+                        <i className="fas fa-tools text-warning me-2"></i>
+                        Detalles del Servicio
+                      </h6>
+                      <Row>
+                        <Col md={6}>
+                          <p className="mb-2">
+                            <strong>Servicio:</strong> {selectedAppointment.service}
+                          </p>
+                          <p className="mb-2">
+                            <strong>Fecha:</strong>{' '}
+                            <Badge bg="info">
+                              <i className="fas fa-calendar me-1"></i>
+                              {selectedAppointment.date}
+                            </Badge>
+                          </p>
+                        </Col>
+                        <Col md={6}>
+                          <p className="mb-2">
+                            <strong>Hora:</strong>{' '}
+                            <Badge bg="secondary">
+                              <i className="fas fa-clock me-1"></i>
+                              {selectedAppointment.time}
+                            </Badge>
+                          </p>
+                          <p className="mb-0">
+                            <strong>Estado:</strong> {getStatusBadge(selectedAppointment.status)}
+                          </p>
+                        </Col>
+                      </Row>
+                      {selectedAppointment.totalPrice && (
+                        <p className="mb-0 mt-3">
+                          <strong>Precio Total:</strong>{' '}
+                          <span className="text-success fs-5">
+                            ${selectedAppointment.totalPrice.toLocaleString('es-CO')}
+                          </span>
+                        </p>
+                      )}
+                    </Card.Body>
+                  </Card>
+                </Col>
+              </Row>
+
+              {selectedAppointment.notes && (
+                <Row>
+                  <Col md={12}>
+                    <Card className="border-0 bg-light">
+                      <Card.Body>
+                        <h6 className="text-muted mb-3">
+                          <i className="fas fa-sticky-note text-danger me-2"></i>
+                          Notas Adicionales
+                        </h6>
+                        <p className="mb-0">{selectedAppointment.notes}</p>
+                      </Card.Body>
+                    </Card>
+                  </Col>
+                </Row>
+              )}
+            </div>
+          )}
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShowViewModal(false)}>
+            <i className="fas fa-times me-2"></i>
+            Cerrar
+          </Button>
+          <Button 
+            variant="primary" 
+            onClick={() => {
+              setShowViewModal(false);
+              setFormData({
+                customer: selectedAppointment.customer,
+                phone: selectedAppointment.phone,
+                email: selectedAppointment.email || '',
+                vehicle: selectedAppointment.vehicle,
+                service: selectedAppointment.service,
+                date: selectedAppointment.date,
+                time: selectedAppointment.time,
+                notes: selectedAppointment.notes || ''
+              });
+              setShowEditModal(true);
+            }}
+          >
+            <i className="fas fa-edit me-2"></i>
+            Editar Cita
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
+      {/* Modal para Editar */}
+      <Modal show={showEditModal} onHide={() => setShowEditModal(false)} size="lg">
+        <Modal.Header closeButton className="bg-success text-white">
+          <Modal.Title>
+            <i className="fas fa-edit me-2"></i>
+            Editar Cita
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form>
+            <Row>
+              <Col md={6}>
+                <Form.Group className="mb-3">
+                  <Form.Label>
+                    <i className="fas fa-user text-primary me-2"></i>
+                    Nombre Completo *
+                  </Form.Label>
+                  <Form.Control
+                    type="text"
+                    name="customer"
+                    value={formData.customer}
+                    onChange={handleInputChange}
+                    required
+                  />
+                </Form.Group>
+              </Col>
+              <Col md={6}>
+                <Form.Group className="mb-3">
+                  <Form.Label>
+                    <i className="fas fa-phone text-success me-2"></i>
+                    Teléfono *
+                  </Form.Label>
+                  <Form.Control
+                    type="tel"
+                    name="phone"
+                    value={formData.phone}
+                    onChange={handleInputChange}
+                    required
+                  />
+                </Form.Group>
+              </Col>
+            </Row>
+            <Row>
+              <Col md={6}>
+                <Form.Group className="mb-3">
+                  <Form.Label>
+                    <i className="fas fa-car text-warning me-2"></i>
+                    Vehículo *
+                  </Form.Label>
+                  <Form.Control
+                    type="text"
+                    name="vehicle"
+                    value={formData.vehicle}
+                    onChange={handleInputChange}
+                    placeholder="Ej: Toyota Corolla 2020"
+                    required
+                  />
+                </Form.Group>
+              </Col>
+              <Col md={6}>
+                <Form.Group className="mb-3">
+                  <Form.Label>
+                    <i className="fas fa-tools text-danger me-2"></i>
+                    Servicio *
+                  </Form.Label>
+                  <Form.Select
+                    name="service"
+                    value={formData.service}
+                    onChange={handleInputChange}
+                    required
+                  >
+                    <option value="">Seleccione un servicio</option>
+                    <option value="Cambio de Aceite">Cambio de Aceite</option>
+                    <option value="Revisión Técnica">Revisión Técnica</option>
+                    <option value="Reparación de Frenos">Reparación de Frenos</option>
+                    <option value="Alineación y Balanceo">Alineación y Balanceo</option>
+                    <option value="Revisión de Motor">Revisión de Motor</option>
+                  </Form.Select>
+                </Form.Group>
+              </Col>
+            </Row>
+            <Row>
+              <Col md={6}>
+                <Form.Group className="mb-3">
+                  <Form.Label>
+                    <i className="fas fa-calendar text-info me-2"></i>
+                    Fecha *
+                  </Form.Label>
+                  <Form.Control
+                    type="date"
+                    name="date"
+                    value={formData.date}
+                    onChange={handleInputChange}
+                    min={new Date().toISOString().split('T')[0]}
+                    required
+                  />
+                </Form.Group>
+              </Col>
+              <Col md={6}>
+                <Form.Group className="mb-3">
+                  <Form.Label>
+                    <i className="fas fa-clock text-secondary me-2"></i>
+                    Hora *
+                  </Form.Label>
+                  <Form.Select
+                    name="time"
+                    value={formData.time}
+                    onChange={handleInputChange}
+                    required
+                  >
+                    <option value="">Seleccione hora</option>
+                    {timeSlots.map(time => (
+                      <option key={time} value={time}>{time}</option>
+                    ))}
+                  </Form.Select>
+                </Form.Group>
+              </Col>
+            </Row>
+            <Form.Group className="mb-3">
+              <Form.Label>
+                <i className="fas fa-sticky-note text-warning me-2"></i>
+                Notas Adicionales
+              </Form.Label>
+              <Form.Control
+                as="textarea"
+                rows={3}
+                name="notes"
+                value={formData.notes}
+                onChange={handleInputChange}
+                placeholder="Describa cualquier detalle adicional..."
+              />
+            </Form.Group>
+          </Form>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShowEditModal(false)}>
+            <i className="fas fa-times me-2"></i>
+            Cancelar
+          </Button>
+          <Button 
+            variant="success" 
+            onClick={() => {
+              // Actualizar la cita
+              setAppointments(appointments.map(apt => 
+                apt.id === selectedAppointment.id 
+                  ? { ...apt, ...formData }
+                  : apt
+              ));
+              setShowEditModal(false);
+              alert('✅ Cita actualizada exitosamente');
+            }}
+          >
+            <i className="fas fa-save me-2"></i>
+            Guardar Cambios
           </Button>
         </Modal.Footer>
       </Modal>

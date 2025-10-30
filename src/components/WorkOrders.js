@@ -3,6 +3,9 @@ import { Container, Row, Col, Card, Button, Table, Modal, Form } from 'react-boo
 
 const WorkOrders = () => {
   const [showModal, setShowModal] = useState(false);
+  const [showViewModal, setShowViewModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [selectedOrder, setSelectedOrder] = useState(null);
   const [workOrders, setWorkOrders] = useState([
     {
       id: 'WO-001',
@@ -156,11 +159,37 @@ const WorkOrders = () => {
                       <td>{order.estimatedTime}</td>
                       <td><strong>${order.totalCost.toLocaleString('es-CO')}</strong></td>
                       <td>
-                        <Button variant="outline-primary" size="sm" className="me-1">
-                          👁️
+                        <Button 
+                          variant="outline-primary" 
+                          size="sm" 
+                          className="me-1"
+                          onClick={() => {
+                            setSelectedOrder(order);
+                            setShowViewModal(true);
+                          }}
+                          title="Ver detalles"
+                        >
+                          <i className="fas fa-eye"></i>
                         </Button>
-                        <Button variant="outline-success" size="sm">
-                          ✏️
+                        <Button 
+                          variant="outline-success" 
+                          size="sm"
+                          onClick={() => {
+                            setSelectedOrder(order);
+                            setFormData({
+                              customer: order.customer,
+                              vehicle: order.vehicle,
+                              service: order.service,
+                              priority: order.priority,
+                              assignedMechanic: order.assignedMechanic,
+                              estimatedTime: order.estimatedTime,
+                              totalCost: order.totalCost
+                            });
+                            setShowEditModal(true);
+                          }}
+                          title="Editar"
+                        >
+                          <i className="fas fa-edit"></i>
                         </Button>
                       </td>
                     </tr>
@@ -283,6 +312,309 @@ const WorkOrders = () => {
           </Button>
           <Button variant="primary" onClick={handleSubmit}>
             Crear Orden
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
+      {/* Modal para Ver Detalles */}
+      <Modal show={showViewModal} onHide={() => setShowViewModal(false)} size="lg">
+        <Modal.Header closeButton className="bg-primary text-white">
+          <Modal.Title>
+            <i className="fas fa-file-alt me-2"></i>
+            Detalles de la Orden de Trabajo
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          {selectedOrder && (
+            <div>
+              <Row className="mb-3">
+                <Col md={12}>
+                  <Card className="border-0 bg-light">
+                    <Card.Body>
+                      <h5 className="text-primary mb-3">
+                        <i className="fas fa-hashtag me-2"></i>
+                        Orden: <strong>{selectedOrder.id}</strong>
+                      </h5>
+                      <div className="d-flex gap-2 mb-2">
+                        {getStatusBadge(selectedOrder.status)}
+                        {getPriorityBadge(selectedOrder.priority)}
+                      </div>
+                    </Card.Body>
+                  </Card>
+                </Col>
+              </Row>
+
+              <Row className="mb-3">
+                <Col md={6}>
+                  <Card className="border-0 bg-light h-100">
+                    <Card.Body>
+                      <h6 className="text-muted mb-3">
+                        <i className="fas fa-user text-primary me-2"></i>
+                        Cliente
+                      </h6>
+                      <p className="mb-0"><strong>{selectedOrder.customer}</strong></p>
+                    </Card.Body>
+                  </Card>
+                </Col>
+                <Col md={6}>
+                  <Card className="border-0 bg-light h-100">
+                    <Card.Body>
+                      <h6 className="text-muted mb-3">
+                        <i className="fas fa-car text-success me-2"></i>
+                        Vehículo
+                      </h6>
+                      <p className="mb-0"><strong>{selectedOrder.vehicle}</strong></p>
+                    </Card.Body>
+                  </Card>
+                </Col>
+              </Row>
+
+              <Row className="mb-3">
+                <Col md={12}>
+                  <Card className="border-0 bg-light">
+                    <Card.Body>
+                      <h6 className="text-muted mb-3">
+                        <i className="fas fa-tools text-warning me-2"></i>
+                        Descripción del Servicio
+                      </h6>
+                      <p className="mb-0">{selectedOrder.service}</p>
+                    </Card.Body>
+                  </Card>
+                </Col>
+              </Row>
+
+              <Row className="mb-3">
+                <Col md={6}>
+                  <Card className="border-0 bg-light h-100">
+                    <Card.Body>
+                      <h6 className="text-muted mb-3">
+                        <i className="fas fa-user-tie text-info me-2"></i>
+                        Mecánico Asignado
+                      </h6>
+                      <p className="mb-0"><strong>{selectedOrder.assignedMechanic}</strong></p>
+                    </Card.Body>
+                  </Card>
+                </Col>
+                <Col md={6}>
+                  <Card className="border-0 bg-light h-100">
+                    <Card.Body>
+                      <h6 className="text-muted mb-3">
+                        <i className="fas fa-calendar text-danger me-2"></i>
+                        Fecha de Inicio
+                      </h6>
+                      <p className="mb-0"><strong>{selectedOrder.startDate}</strong></p>
+                    </Card.Body>
+                  </Card>
+                </Col>
+              </Row>
+
+              <Row className="mb-3">
+                <Col md={6}>
+                  <Card className="border-0 bg-light h-100">
+                    <Card.Body>
+                      <h6 className="text-muted mb-3">
+                        <i className="fas fa-clock text-secondary me-2"></i>
+                        Tiempo Estimado
+                      </h6>
+                      <p className="mb-0"><strong>{selectedOrder.estimatedTime}</strong></p>
+                    </Card.Body>
+                  </Card>
+                </Col>
+                <Col md={6}>
+                  <Card className="border-0 bg-light h-100">
+                    <Card.Body>
+                      <h6 className="text-muted mb-3">
+                        <i className="fas fa-dollar-sign text-success me-2"></i>
+                        Costo Total
+                      </h6>
+                      <p className="mb-0">
+                        <strong className="fs-5 text-success">
+                          ${selectedOrder.totalCost.toLocaleString('es-CO')}
+                        </strong>
+                      </p>
+                    </Card.Body>
+                  </Card>
+                </Col>
+              </Row>
+            </div>
+          )}
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShowViewModal(false)}>
+            <i className="fas fa-times me-2"></i>
+            Cerrar
+          </Button>
+          <Button 
+            variant="primary" 
+            onClick={() => {
+              setShowViewModal(false);
+              setFormData({
+                customer: selectedOrder.customer,
+                vehicle: selectedOrder.vehicle,
+                service: selectedOrder.service,
+                priority: selectedOrder.priority,
+                assignedMechanic: selectedOrder.assignedMechanic,
+                estimatedTime: selectedOrder.estimatedTime,
+                totalCost: selectedOrder.totalCost
+              });
+              setShowEditModal(true);
+            }}
+          >
+            <i className="fas fa-edit me-2"></i>
+            Editar Orden
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
+      {/* Modal para Editar */}
+      <Modal show={showEditModal} onHide={() => setShowEditModal(false)} size="lg">
+        <Modal.Header closeButton className="bg-success text-white">
+          <Modal.Title>
+            <i className="fas fa-edit me-2"></i>
+            Editar Orden de Trabajo
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form>
+            <Row>
+              <Col md={6}>
+                <Form.Group className="mb-3">
+                  <Form.Label>
+                    <i className="fas fa-user text-primary me-2"></i>
+                    Cliente *
+                  </Form.Label>
+                  <Form.Control
+                    type="text"
+                    name="customer"
+                    value={formData.customer}
+                    onChange={handleInputChange}
+                    required
+                  />
+                </Form.Group>
+              </Col>
+              <Col md={6}>
+                <Form.Group className="mb-3">
+                  <Form.Label>
+                    <i className="fas fa-car text-success me-2"></i>
+                    Vehículo *
+                  </Form.Label>
+                  <Form.Control
+                    type="text"
+                    name="vehicle"
+                    value={formData.vehicle}
+                    onChange={handleInputChange}
+                    placeholder="Marca Modelo Año"
+                    required
+                  />
+                </Form.Group>
+              </Col>
+            </Row>
+            
+            <Form.Group className="mb-3">
+              <Form.Label>
+                <i className="fas fa-tools text-warning me-2"></i>
+                Descripción del Servicio *
+              </Form.Label>
+              <Form.Control
+                as="textarea"
+                rows={3}
+                name="service"
+                value={formData.service}
+                onChange={handleInputChange}
+                required
+              />
+            </Form.Group>
+
+            <Row>
+              <Col md={4}>
+                <Form.Group className="mb-3">
+                  <Form.Label>
+                    <i className="fas fa-exclamation-circle text-danger me-2"></i>
+                    Prioridad
+                  </Form.Label>
+                  <Form.Select
+                    name="priority"
+                    value={formData.priority}
+                    onChange={handleInputChange}
+                  >
+                    <option value="Baja">Baja</option>
+                    <option value="Normal">Normal</option>
+                    <option value="Alta">Alta</option>
+                    <option value="Crítica">Crítica</option>
+                  </Form.Select>
+                </Form.Group>
+              </Col>
+              <Col md={4}>
+                <Form.Group className="mb-3">
+                  <Form.Label>
+                    <i className="fas fa-user-tie text-info me-2"></i>
+                    Mecánico Asignado
+                  </Form.Label>
+                  <Form.Select
+                    name="assignedMechanic"
+                    value={formData.assignedMechanic}
+                    onChange={handleInputChange}
+                  >
+                    <option value="">Seleccionar...</option>
+                    <option value="Carlos López">Carlos López</option>
+                    <option value="Ana Martínez">Ana Martínez</option>
+                    <option value="Luis Rodríguez">Luis Rodríguez</option>
+                    <option value="Pedro García">Pedro García</option>
+                  </Form.Select>
+                </Form.Group>
+              </Col>
+              <Col md={4}>
+                <Form.Group className="mb-3">
+                  <Form.Label>
+                    <i className="fas fa-clock text-secondary me-2"></i>
+                    Tiempo Estimado
+                  </Form.Label>
+                  <Form.Control
+                    type="text"
+                    name="estimatedTime"
+                    value={formData.estimatedTime}
+                    onChange={handleInputChange}
+                    placeholder="Ej: 2 horas"
+                  />
+                </Form.Group>
+              </Col>
+            </Row>
+
+            <Form.Group className="mb-3">
+              <Form.Label>
+                <i className="fas fa-dollar-sign text-success me-2"></i>
+                Costo Estimado (COP)
+              </Form.Label>
+              <Form.Control
+                type="number"
+                name="totalCost"
+                value={formData.totalCost}
+                onChange={handleInputChange}
+                placeholder="0"
+              />
+            </Form.Group>
+          </Form>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShowEditModal(false)}>
+            <i className="fas fa-times me-2"></i>
+            Cancelar
+          </Button>
+          <Button 
+            variant="success" 
+            onClick={() => {
+              // Actualizar la orden
+              setWorkOrders(workOrders.map(order => 
+                order.id === selectedOrder.id 
+                  ? { ...order, ...formData }
+                  : order
+              ));
+              setShowEditModal(false);
+              alert('✅ Orden actualizada exitosamente');
+            }}
+          >
+            <i className="fas fa-save me-2"></i>
+            Guardar Cambios
           </Button>
         </Modal.Footer>
       </Modal>

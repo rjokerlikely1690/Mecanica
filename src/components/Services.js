@@ -12,8 +12,10 @@ const Services = ({ onAddToCart }) => {
       description: "Cambio completo de aceite y filtros para mantener el motor en óptimas condiciones.",
       price: 25000,
       duration: "30 min",
-      icon: "fas fa-oil-can",
-      displayPrice: "$25.000"
+      icon: "fas fa-droplet",
+      displayPrice: "$25.000",
+      image: "https://images.unsplash.com/photo-1625047509168-a7026f36de04?auto=format&fit=crop&w=600&q=80",
+      gradient: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)"
     },
     {
       id: 2,
@@ -21,8 +23,10 @@ const Services = ({ onAddToCart }) => {
       description: "Inspección completa del vehículo para detectar problemas y mantener la seguridad.",
       price: 45000,
       duration: "1 hora",
-      icon: "fas fa-search",
-      displayPrice: "$45.000"
+      icon: "fas fa-magnifying-glass",
+      displayPrice: "$45.000",
+      image: "https://images.unsplash.com/photo-1580273916550-e323be2ae537?auto=format&fit=crop&w=600&q=80",
+      gradient: "linear-gradient(135deg, #f093fb 0%, #f5576c 100%)"
     },
     {
       id: 3,
@@ -30,8 +34,10 @@ const Services = ({ onAddToCart }) => {
       description: "Revisión y reparación del sistema de frenos para garantizar la seguridad.",
       price: 80000,
       duration: "2 horas",
-      icon: "fas fa-hand-paper",
-      displayPrice: "$80.000"
+      icon: "fas fa-circle-stop",
+      displayPrice: "$80.000",
+      image: "https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?auto=format&fit=crop&w=600&q=80",
+      gradient: "linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)"
     },
     {
       id: 4,
@@ -39,8 +45,10 @@ const Services = ({ onAddToCart }) => {
       description: "Diagnóstico y reparación de problemas del motor y sistemas relacionados.",
       price: 120000,
       duration: "Variable",
-      icon: "fas fa-cog",
-      displayPrice: "Desde $120.000"
+      icon: "fas fa-gear",
+      displayPrice: "Desde $120.000",
+      image: "https://images.unsplash.com/photo-1607860108855-64acf2078ed9?auto=format&fit=crop&w=600&q=80",
+      gradient: "linear-gradient(135deg, #fa709a 0%, #fee140 100%)"
     },
     {
       id: 5,
@@ -48,8 +56,10 @@ const Services = ({ onAddToCart }) => {
       description: "Revisión y reparación del sistema de suspensión para una conducción suave.",
       price: 90000,
       duration: "1.5 horas",
-      icon: "fas fa-car",
-      displayPrice: "$90.000"
+      icon: "fas fa-car-side",
+      displayPrice: "$90.000",
+      image: "https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?auto=format&fit=crop&w=600&q=80",
+      gradient: "linear-gradient(135deg, #30cfd0 0%, #330867 100%)"
     },
     {
       id: 6,
@@ -57,8 +67,10 @@ const Services = ({ onAddToCart }) => {
       description: "Mantenimiento y reparación del sistema de aire acondicionado.",
       price: 60000,
       duration: "1 hora",
-      icon: "fas fa-snowflake",
-      displayPrice: "$60.000"
+      icon: "fas fa-wind",
+      displayPrice: "$60.000",
+      image: "https://images.unsplash.com/photo-1621905251189-08b45d6a269e?auto=format&fit=crop&w=600&q=80",
+      gradient: "linear-gradient(135deg, #a8edea 0%, #fed6e3 100%)"
     }
   ];
 
@@ -88,19 +100,101 @@ const Services = ({ onAddToCart }) => {
       <Row>
         {services.map((service) => (
           <Col md={6} lg={4} key={service.id} className="mb-4">
-            <Card className="h-100 shadow-sm service-card">
-              <Card.Body className="text-center">
-                <div className="service-icon mb-3">
-                  <i className={`${service.icon} text-primary`} style={{ fontSize: '3rem' }}></i>
+            <Card 
+              className="h-100 shadow-sm service-card border-0"
+              style={{
+                cursor: 'pointer',
+                transition: 'all 0.3s ease',
+                overflow: 'hidden'
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.transform = 'translateY(-10px)';
+                e.currentTarget.style.boxShadow = '0 15px 40px rgba(0,0,0,0.15)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = 'translateY(0)';
+                e.currentTarget.style.boxShadow = '0 2px 8px rgba(0,0,0,0.1)';
+              }}
+            >
+              {/* Image Section */}
+              <div 
+                className="position-relative"
+                style={{
+                  height: '220px',
+                  overflow: 'hidden',
+                  background: service.gradient
+                }}
+              >
+                <img 
+                  src={service.image}
+                  alt={service.title}
+                  style={{
+                    width: '100%',
+                    height: '100%',
+                    objectFit: 'cover'
+                  }}
+                  onError={(e) => {
+                    e.target.style.display = 'none';
+                  }}
+                />
+                {/* Gradient Overlay */}
+                <div 
+                  style={{
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    bottom: 0,
+                    background: 'linear-gradient(to bottom, rgba(0,0,0,0.2), rgba(0,0,0,0.5))'
+                  }}
+                ></div>
+                {/* Price Badge */}
+                <div 
+                  className="position-absolute top-0 end-0 m-3"
+                >
+                  <span 
+                    className="badge bg-success text-white px-3 py-2"
+                    style={{
+                      fontSize: '1rem',
+                      fontWeight: 'bold',
+                      boxShadow: '0 4px 15px rgba(0,0,0,0.3)'
+                    }}
+                  >
+                    {service.displayPrice}
+                  </span>
                 </div>
-                <Card.Title className="text-primary">{service.title}</Card.Title>
-                <Card.Text className="text-muted">{service.description}</Card.Text>
+                {/* Icon Badge */}
+                <div 
+                  className="position-absolute"
+                  style={{
+                    bottom: '-30px',
+                    left: '50%',
+                    transform: 'translateX(-50%)',
+                    zIndex: 2
+                  }}
+                >
+                  <div 
+                    className="rounded-circle bg-white d-inline-flex align-items-center justify-content-center"
+                    style={{
+                      width: '60px',
+                      height: '60px',
+                      boxShadow: '0 8px 20px rgba(0,0,0,0.2)'
+                    }}
+                  >
+                    <i className={`${service.icon} text-primary`} style={{ fontSize: '2rem' }}></i>
+                  </div>
+                </div>
+              </div>
+
+              <Card.Body className="text-center pt-5 pb-4">
+                <Card.Title className="text-primary fw-bold mb-3">{service.title}</Card.Title>
+                <Card.Text className="text-muted mb-3" style={{ minHeight: '60px' }}>
+                  {service.description}
+                </Card.Text>
                 <div className="mb-3">
-                  <strong className="text-success">{service.displayPrice}</strong>
-                  <br />
                   <small className="text-muted">
-                    <i className="fas fa-clock me-1"></i>
-                    {service.duration}
+                    <i className="fas fa-clock me-2 text-primary"></i>
+                    Duración: <strong>{service.duration}</strong>
                   </small>
                 </div>
                 <div className="d-grid gap-2">
@@ -128,13 +222,61 @@ const Services = ({ onAddToCart }) => {
 
       {/* Modal para solicitar servicio */}
       <Modal show={showModal} onHide={() => setShowModal(false)} size="lg">
-        <Modal.Header closeButton>
+        <Modal.Header closeButton className="bg-primary text-white">
           <Modal.Title>
-            <i className={`${selectedService?.icon} text-primary me-2`}></i>
+            <i className={`${selectedService?.icon} me-2`}></i>
             Solicitar Servicio: {selectedService?.title}
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
+          {/* Service Image Preview */}
+          {selectedService && (
+            <div className="mb-4">
+              <div 
+                className="position-relative"
+                style={{
+                  height: '200px',
+                  borderRadius: '10px',
+                  overflow: 'hidden',
+                  background: selectedService.gradient
+                }}
+              >
+                <img 
+                  src={selectedService.image}
+                  alt={selectedService.title}
+                  style={{
+                    width: '100%',
+                    height: '100%',
+                    objectFit: 'cover'
+                  }}
+                  onError={(e) => {
+                    e.target.style.display = 'none';
+                  }}
+                />
+                <div 
+                  style={{
+                    position: 'absolute',
+                    bottom: 0,
+                    left: 0,
+                    right: 0,
+                    background: 'linear-gradient(to top, rgba(0,0,0,0.7), transparent)',
+                    padding: '20px'
+                  }}
+                >
+                  <h5 className="text-white mb-1">{selectedService.title}</h5>
+                  <p className="text-white-50 mb-0 small">{selectedService.description}</p>
+                  <div className="mt-2">
+                    <span className="badge bg-success me-2">{selectedService.displayPrice}</span>
+                    <span className="badge bg-info">
+                      <i className="fas fa-clock me-1"></i>
+                      {selectedService.duration}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+          
           <Form>
             <Row>
               <Col md={6}>

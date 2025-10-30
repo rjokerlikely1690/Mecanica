@@ -1,7 +1,7 @@
 import React from 'react';
 import { Container, Row, Col, Card, Button } from 'react-bootstrap';
 
-const Dashboard = () => {
+const Dashboard = ({ onSectionChange }) => {
   const stats = [
     {
       title: 'Órdenes Activas',
@@ -110,7 +110,12 @@ const Dashboard = () => {
                   <i className="fas fa-history me-2 text-primary"></i>
                   Actividad Reciente
                 </h5>
-                <Button variant="outline-primary" size="sm">
+                <Button 
+                  variant="outline-primary" 
+                  size="sm"
+                  onClick={() => onSectionChange && onSectionChange('work-orders')}
+                >
+                  <i className="fas fa-eye me-1"></i>
                   Ver todo
                 </Button>
               </div>
@@ -145,7 +150,12 @@ const Dashboard = () => {
                   <i className="fas fa-calendar-alt me-2 text-primary"></i>
                   Próximas Citas
                 </h5>
-                <Button variant="outline-primary" size="sm">
+                <Button 
+                  variant="outline-primary" 
+                  size="sm"
+                  onClick={() => onSectionChange && onSectionChange('appointments')}
+                >
+                  <i className="fas fa-calendar-check me-1"></i>
                   Ver todo
                 </Button>
               </div>
@@ -188,25 +198,41 @@ const Dashboard = () => {
             <Card.Body className="p-4">
               <Row>
                 <Col md={3} className="mb-3">
-                  <Button variant="outline-primary" className="w-100 h-100 p-3 d-flex flex-column align-items-center">
+                  <Button 
+                    variant="outline-primary" 
+                    className="w-100 h-100 p-3 d-flex flex-column align-items-center"
+                    onClick={() => onSectionChange && onSectionChange('work-orders')}
+                  >
                     <i className="fas fa-plus-circle mb-2 fs-3"></i>
                     <span>Nueva Orden</span>
                   </Button>
                 </Col>
                 <Col md={3} className="mb-3">
-                  <Button variant="outline-success" className="w-100 h-100 p-3 d-flex flex-column align-items-center">
+                  <Button 
+                    variant="outline-success" 
+                    className="w-100 h-100 p-3 d-flex flex-column align-items-center"
+                    onClick={() => onSectionChange && onSectionChange('quotes')}
+                  >
                     <i className="fas fa-file-invoice-dollar mb-2 fs-3"></i>
                     <span>Crear Cotización</span>
                   </Button>
                 </Col>
                 <Col md={3} className="mb-3">
-                  <Button variant="outline-info" className="w-100 h-100 p-3 d-flex flex-column align-items-center">
+                  <Button 
+                    variant="outline-info" 
+                    className="w-100 h-100 p-3 d-flex flex-column align-items-center"
+                    onClick={() => onSectionChange && onSectionChange('appointments')}
+                  >
                     <i className="fas fa-calendar-plus mb-2 fs-3"></i>
                     <span>Programar Cita</span>
                   </Button>
                 </Col>
                 <Col md={3} className="mb-3">
-                  <Button variant="outline-warning" className="w-100 h-100 p-3 d-flex flex-column align-items-center">
+                  <Button 
+                    variant="outline-warning" 
+                    className="w-100 h-100 p-3 d-flex flex-column align-items-center"
+                    onClick={() => onSectionChange && onSectionChange('income')}
+                  >
                     <i className="fas fa-chart-bar mb-2 fs-3"></i>
                     <span>Ver Reportes</span>
                   </Button>

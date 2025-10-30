@@ -1,5 +1,107 @@
 /* Professional AutoMax Mechanics Management System */
 
+/* Home Page Animations and Effects */
+.hero-section .btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.3) !important;
+}
+
+.service-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 15px 35px rgba(0,0,0,0.15) !important;
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-20px);
+  }
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+/* Gradient Text */
+.gradient-text {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Card Hover Effects */
+.card {
+  transition: all 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+}
+
+/* Button Pulse Effect */
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(102, 126, 234, 0.7);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(102, 126, 234, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(102, 126, 234, 0);
+  }
+}
+
+.btn-primary {
+  animation: pulse 2s infinite;
+}
+
+/* Footer Styles */
+footer {
+  background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%) !important;
+  box-shadow: 0 -4px 6px -1px rgb(0 0 0 / 0.1);
+}
+
+footer a {
+  transition: all 0.3s ease;
+}
+
+footer a:hover {
+  color: #fbbf24 !important;
+  transform: translateY(-2px);
+}
+
+footer .fab, footer .fas {
+  transition: all 0.3s ease;
+}
+
+footer a:hover .fab, footer a:hover .fas {
+  transform: scale(1.1);
+  color: #fbbf24;
+}
+
+footer h5 {
+  font-weight: 600;
+  letter-spacing: -0.025em;
+  border-bottom: 2px solid #fbbf24;
+  padding-bottom: 0.5rem;
+  display: inline-block;
+}
+
+footer .text-warning {
+  color: #fbbf24 !important;
+}
+
+footer small {
+  color: #d1d5db;
+}
+
+footer strong {
+  color: #f3f4f6;
+}
+
 :root {
   --primary-color: #1e3a8a;
   --primary-dark: #1e40af;
