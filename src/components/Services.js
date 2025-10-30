@@ -1,9 +1,19 @@
 import React, { useState } from 'react';
-import { Container, Row, Col, Card, Button, Modal, Form } from 'react-bootstrap';
+import { Container, Row, Col, Card, Button, Modal, Form, Alert } from 'react-bootstrap';
 
 const Services = ({ onAddToCart }) => {
   const [showModal, setShowModal] = useState(false);
   const [selectedService, setSelectedService] = useState(null);
+  const [showNotification, setShowNotification] = useState(false);
+  const [notificationMessage, setNotificationMessage] = useState('');
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    phone: '',
+    date: '',
+    time: '',
+    comments: ''
+  });
 
   const services = [
     {
@@ -77,15 +87,99 @@ const Services = ({ onAddToCart }) => {
   const handleServiceClick = (service) => {
     setSelectedService(service);
     setShowModal(true);
+    // Reset form when opening modal
+    setFormData({
+      name: '',
+      email: '',
+      phone: '',
+      date: '',
+      time: '',
+      comments: ''
+    });
   };
 
-      const handleAddToCart = (service) => {
-        onAddToCart({
-          ...service,
-          type: 'servicio'
-        });
-        setShowModal(false);
-      };
+  const handleAddToCart = (service) => {
+    onAddToCart({
+      ...service,
+      type: 'servicio'
+    });
+    setShowModal(false);
+  };
+
+  const handleFormChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
+  const handleConfirmAppointment = () => {
+    // Validar campos requeridos
+    if (!formData.name || !formData.email || !formData.phone || !formData.date || !formData.time) {
+      setNotificationMessage('⚠️ Por favor, complete todos los campos obligatorios');
+      setShowNotification(true);
+      setTimeout(() => setShowNotification(false), 3000);
+      return;
+    }
+
+    // Validar email
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(formData.email)) {
+      setNotificationMessage('⚠️ Por favor, ingrese un email válido');
+      setShowNotification(true);
+      setTimeout(() => setShowNotification(false), 3000);
+      return;
+    }
+
+    // Crear objeto de cita
+    const appointment = {
+      id: Date.now(),
+      service: selectedService.title,
+      serviceId: selectedService.id,
+      price: selectedService.price,
+      duration: selectedService.duration,
+      customer: {
+        name: formData.name,
+        email: formData.email,
+        phone: formData.phone
+      },
+      date: formData.date,
+      time: formData.time,
+      comments: formData.comments,
+      status: 'Programada',
+      createdAt: new Date().toISOString()
+    };
+
+    // Guardar en localStorage
+    const appointments = JSON.parse(localStorage.getItem('automax-appointments') || '[]');
+    appointments.push(appointment);
+    localStorage.setItem('automax-appointments', JSON.stringify(appointments));
+
+    // Agregar servicio al carrito automáticamente
+    onAddToCart({
+      ...selectedService,
+      type: 'servicio'
+    });
+
+    // Mostrar notificación de éxito
+    setNotificationMessage(`✅ ¡Cita confirmada! ${selectedService.title} programado para ${formData.date} a las ${formData.time}`);
+    setShowNotification(true);
+    setTimeout(() => setShowNotification(false), 5000);
+
+    // Cerrar modal
+    setShowModal(false);
+
+    // Limpiar formulario
+    setFormData({
+      name: '',
+      email: '',
+      phone: '',
+      date: '',
+      time: '',
+      comments: ''
+    });
+  };
 
   return (
     <Container className="my-5">
@@ -97,15 +191,15 @@ const Services = ({ onAddToCart }) => {
           </p>
         </Col>
       </Row>
-      <Row>
+      <Row className="g-4" style={{ marginBottom: '80px' }}>
         {services.map((service) => (
-          <Col md={6} lg={4} key={service.id} className="mb-4">
+          <Col md={6} lg={4} key={service.id} style={{ marginBottom: '60px' }}>
             <Card 
               className="h-100 shadow-sm service-card border-0"
               style={{
                 cursor: 'pointer',
                 transition: 'all 0.3s ease',
-                overflow: 'hidden'
+                overflow: 'visible'
               }}
               onMouseEnter={(e) => {
                 e.currentTarget.style.transform = 'translateY(-10px)';
@@ -163,30 +257,34 @@ const Services = ({ onAddToCart }) => {
                     {service.displayPrice}
                   </span>
                 </div>
-                {/* Icon Badge */}
+              </div>
+
+              <Card.Body className="text-center pb-4" style={{ paddingTop: '20px', position: 'relative' }}>
+                {/* Icon Badge - Ahora dentro del Card.Body */}
                 <div 
-                  className="position-absolute"
                   style={{
-                    bottom: '-30px',
+                    position: 'absolute',
+                    top: '-40px',
                     left: '50%',
                     transform: 'translateX(-50%)',
                     zIndex: 2
                   }}
                 >
                   <div 
-                    className="rounded-circle bg-white d-inline-flex align-items-center justify-content-center"
+                    className="rounded-circle bg-white d-flex align-items-center justify-content-center"
                     style={{
-                      width: '60px',
-                      height: '60px',
-                      boxShadow: '0 8px 20px rgba(0,0,0,0.2)'
+                      width: '80px',
+                      height: '80px',
+                      boxShadow: '0 10px 30px rgba(0,0,0,0.3)',
+                      border: '3px solid #fff'
                     }}
                   >
-                    <i className={`${service.icon} text-primary`} style={{ fontSize: '2rem' }}></i>
+                    <i className={`${service.icon} text-primary`} style={{ fontSize: '2.5rem' }}></i>
                   </div>
                 </div>
-              </div>
-
-              <Card.Body className="text-center pt-5 pb-4">
+                
+                {/* Espaciador para el icono */}
+                <div style={{ height: '50px' }}></div>
                 <Card.Title className="text-primary fw-bold mb-3">{service.title}</Card.Title>
                 <Card.Text className="text-muted mb-3" style={{ minHeight: '60px' }}>
                   {service.description}
@@ -277,56 +375,98 @@ const Services = ({ onAddToCart }) => {
             </div>
           )}
           
+          {/* Notification Alert */}
+          {showNotification && (
+            <Alert variant={notificationMessage.includes('⚠️') ? 'warning' : 'success'} className="mb-3">
+              {notificationMessage}
+            </Alert>
+          )}
+
           <Form>
             <Row>
               <Col md={6}>
                 <Form.Group className="mb-3">
-                  <Form.Label>Nombre Completo</Form.Label>
-                  <Form.Control type="text" placeholder="Ingrese su nombre" />
+                  <Form.Label>Nombre Completo *</Form.Label>
+                  <Form.Control 
+                    type="text" 
+                    name="name"
+                    value={formData.name}
+                    onChange={handleFormChange}
+                    placeholder="Ingrese su nombre" 
+                    required
+                  />
                 </Form.Group>
               </Col>
               <Col md={6}>
                 <Form.Group className="mb-3">
-                  <Form.Label>Teléfono</Form.Label>
-                  <Form.Control type="tel" placeholder="Ingrese su teléfono" />
+                  <Form.Label>Teléfono *</Form.Label>
+                  <Form.Control 
+                    type="tel" 
+                    name="phone"
+                    value={formData.phone}
+                    onChange={handleFormChange}
+                    placeholder="Ingrese su teléfono" 
+                    required
+                  />
                 </Form.Group>
               </Col>
             </Row>
             <Row>
-              <Col md={6}>
+              <Col md={12}>
                 <Form.Group className="mb-3">
-                  <Form.Label>Email</Form.Label>
-                  <Form.Control type="email" placeholder="Ingrese su email" />
-                </Form.Group>
-              </Col>
-              <Col md={6}>
-                <Form.Group className="mb-3">
-                  <Form.Label>Marca y Modelo del Vehículo</Form.Label>
-                  <Form.Control type="text" placeholder="Ej: Toyota Corolla 2020" />
+                  <Form.Label>Email *</Form.Label>
+                  <Form.Control 
+                    type="email" 
+                    name="email"
+                    value={formData.email}
+                    onChange={handleFormChange}
+                    placeholder="Ingrese su email" 
+                    required
+                  />
                 </Form.Group>
               </Col>
             </Row>
             <Form.Group className="mb-3">
-              <Form.Label>Fecha Preferida</Form.Label>
-              <Form.Control type="date" />
+              <Form.Label>Fecha Preferida *</Form.Label>
+              <Form.Control 
+                type="date" 
+                name="date"
+                value={formData.date}
+                onChange={handleFormChange}
+                min={new Date().toISOString().split('T')[0]}
+                required
+              />
             </Form.Group>
             <Form.Group className="mb-3">
-              <Form.Label>Hora Preferida</Form.Label>
-              <Form.Select>
-                <option>Seleccione una hora</option>
-                <option>08:00 AM</option>
-                <option>09:00 AM</option>
-                <option>10:00 AM</option>
-                <option>11:00 AM</option>
-                <option>02:00 PM</option>
-                <option>03:00 PM</option>
-                <option>04:00 PM</option>
+              <Form.Label>Hora Preferida *</Form.Label>
+              <Form.Select
+                name="time"
+                value={formData.time}
+                onChange={handleFormChange}
+                required
+              >
+                <option value="">Seleccione una hora</option>
+                <option value="08:00 AM">08:00 AM</option>
+                <option value="09:00 AM">09:00 AM</option>
+                <option value="10:00 AM">10:00 AM</option>
+                <option value="11:00 AM">11:00 AM</option>
+                <option value="02:00 PM">02:00 PM</option>
+                <option value="03:00 PM">03:00 PM</option>
+                <option value="04:00 PM">04:00 PM</option>
               </Form.Select>
             </Form.Group>
             <Form.Group className="mb-3">
               <Form.Label>Comentarios Adicionales</Form.Label>
-              <Form.Control as="textarea" rows={3} placeholder="Describa cualquier problema específico o comentario adicional" />
+              <Form.Control 
+                as="textarea" 
+                rows={3} 
+                name="comments"
+                value={formData.comments}
+                onChange={handleFormChange}
+                placeholder="Describa cualquier problema específico o comentario adicional" 
+              />
             </Form.Group>
+            <small className="text-muted">* Campos obligatorios</small>
           </Form>
         </Modal.Body>
         <Modal.Footer>
@@ -342,7 +482,10 @@ const Services = ({ onAddToCart }) => {
               <i className="fas fa-shopping-cart me-2"></i>
               Agregar al Carrito
             </Button>
-            <Button variant="primary">
+            <Button 
+              variant="primary"
+              onClick={handleConfirmAppointment}
+            >
               <i className="fas fa-calendar-check me-2"></i>
               Confirmar Cita Directa
             </Button>

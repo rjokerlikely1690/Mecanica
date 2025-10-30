@@ -7,41 +7,7 @@ const Appointments = () => {
   const [showEditModal, setShowEditModal] = useState(false);
   const [selectedAppointment, setSelectedAppointment] = useState(null);
   const [cartItems, setCartItems] = useState([]);
-  const [appointments, setAppointments] = useState([
-    {
-      id: 1,
-      customer: "Juan Pérez",
-      phone: "3001234567",
-      vehicle: "Toyota Corolla 2020",
-      service: "Cambio de Aceite",
-      date: "2024-01-15",
-      time: "10:00 AM",
-      status: "Confirmada",
-      notes: "Primera vez en el taller"
-    },
-    {
-      id: 2,
-      customer: "María García",
-      phone: "3109876543",
-      vehicle: "Honda Civic 2019",
-      service: "Revisión Técnica",
-      date: "2024-01-15",
-      time: "02:00 PM",
-      status: "Pendiente",
-      notes: "Revisión anual"
-    },
-    {
-      id: 3,
-      customer: "Carlos López",
-      phone: "3154567890",
-      vehicle: "Nissan Sentra 2021",
-      service: "Reparación de Frenos",
-      date: "2024-01-16",
-      time: "09:00 AM",
-      status: "En Proceso",
-      notes: "Ruido en frenos delanteros"
-    }
-  ]);
+  const [appointments, setAppointments] = useState([]);
 
   const [formData, setFormData] = useState({
     customer: '',
@@ -54,11 +20,34 @@ const Appointments = () => {
     notes: ''
   });
 
-  // Cargar items del carrito desde localStorage
+  // Cargar items del carrito y citas desde localStorage
   useEffect(() => {
+    // Cargar carrito
     const savedCartItems = localStorage.getItem('automax-cart');
     if (savedCartItems) {
       setCartItems(JSON.parse(savedCartItems));
+    }
+
+    // Cargar citas guardadas
+    const savedAppointments = localStorage.getItem('automax-appointments');
+    if (savedAppointments) {
+      const parsedAppointments = JSON.parse(savedAppointments);
+      // Mapear las citas al formato del componente
+      const formattedAppointments = parsedAppointments.map(apt => ({
+        id: apt.id,
+        customer: apt.customer.name,
+        phone: apt.customer.phone,
+        email: apt.customer.email,
+        vehicle: `Vehículo (${apt.service})`, // Placeholder ya que no guardamos vehicle en Services
+        service: apt.service,
+        date: apt.date,
+        time: apt.time,
+        status: apt.status || 'Programada',
+        notes: apt.comments,
+        totalPrice: apt.price,
+        duration: apt.duration
+      }));
+      setAppointments(formattedAppointments);
     }
   }, []);
 
@@ -93,7 +82,7 @@ const Appointments = () => {
     const totalPrice = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
     
     const newAppointment = {
-      id: appointments.length + 1,
+      id: Date.now(),
       ...formData,
       service: cartServices || formData.service,
       cartItems: cartItems,
@@ -101,7 +90,32 @@ const Appointments = () => {
       status: "Pendiente"
     };
     
-    setAppointments([...appointments, newAppointment]);
+    // Actualizar estado local
+    const updatedAppointments = [...appointments, newAppointment];
+    setAppointments(updatedAppointments);
+    
+    // Guardar en localStorage en el mismo formato que Services.js
+    const savedAppointments = JSON.parse(localStorage.getItem('automax-appointments') || '[]');
+    savedAppointments.push({
+      id: newAppointment.id,
+      service: newAppointment.service,
+      serviceId: null,
+      price: newAppointment.totalPrice,
+      duration: "Variable",
+      customer: {
+        name: newAppointment.customer,
+        email: newAppointment.email,
+        phone: newAppointment.phone
+      },
+      date: newAppointment.date,
+      time: newAppointment.time,
+      comments: newAppointment.notes,
+      status: newAppointment.status,
+      createdAt: new Date().toISOString()
+    });
+    localStorage.setItem('automax-appointments', JSON.stringify(savedAppointments));
+    
+    // Limpiar formulario
     setFormData({
       customer: '',
       phone: '',
@@ -113,10 +127,27 @@ const Appointments = () => {
       notes: ''
     });
     
-        // Limpiar carrito después de confirmar la cita
-        setCartItems([]);
-        localStorage.removeItem('automax-cart');
+    // Limpiar carrito después de confirmar la cita
+    setCartItems([]);
+    localStorage.removeItem('automax-cart');
     setShowForm(false);
+    
+    alert('✅ Cita programada exitosamente');
+  };
+
+  const handleDeleteAppointment = (appointmentId) => {
+    if (window.confirm('¿Estás seguro de que deseas eliminar esta cita?')) {
+      // Eliminar del estado local
+      const updatedAppointments = appointments.filter(apt => apt.id !== appointmentId);
+      setAppointments(updatedAppointments);
+      
+      // Eliminar de localStorage
+      const savedAppointments = JSON.parse(localStorage.getItem('automax-appointments') || '[]');
+      const filteredAppointments = savedAppointments.filter(apt => apt.id !== appointmentId);
+      localStorage.setItem('automax-appointments', JSON.stringify(filteredAppointments));
+      
+      alert('✅ Cita eliminada exitosamente');
+    }
   };
 
   const getStatusBadge = (status) => {
@@ -198,7 +229,22 @@ const Appointments = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {appointments.map((appointment) => (
+                  {appointments.length === 0 ? (
+                    <tr>
+                      <td colSpan="9" className="text-center py-5">
+                        <i className="fas fa-calendar-times text-muted mb-3" style={{ fontSize: '4rem' }}></i>
+                        <h5 className="text-muted">No hay citas programadas</h5>
+                        <p className="text-muted">
+                          Las citas que programes desde "Servicios" o desde aquí aparecerán en esta tabla.
+                        </p>
+                        <Button variant="primary" onClick={() => setShowForm(true)}>
+                          <i className="fas fa-plus me-2"></i>
+                          Programar Primera Cita
+                        </Button>
+                      </td>
+                    </tr>
+                  ) : (
+                    appointments.map((appointment) => (
                     <tr key={appointment.id}>
                       <td>{appointment.customer}</td>
                       <td>{appointment.phone}</td>
@@ -217,42 +263,52 @@ const Appointments = () => {
                       </td>
                       <td>{getStatusBadge(appointment.status)}</td>
                       <td>
-                        <Button 
-                          variant="outline-primary" 
-                          size="sm" 
-                          className="me-2"
-                          onClick={() => {
-                            setSelectedAppointment(appointment);
-                            setShowViewModal(true);
-                          }}
-                        >
-                          <i className="fas fa-eye me-1"></i>
-                          Ver
-                        </Button>
-                        <Button 
-                          variant="outline-success" 
-                          size="sm"
-                          onClick={() => {
-                            setSelectedAppointment(appointment);
-                            setFormData({
-                              customer: appointment.customer,
-                              phone: appointment.phone,
-                              email: appointment.email || '',
-                              vehicle: appointment.vehicle,
-                              service: appointment.service,
-                              date: appointment.date,
-                              time: appointment.time,
-                              notes: appointment.notes || ''
-                            });
-                            setShowEditModal(true);
-                          }}
-                        >
-                          <i className="fas fa-edit me-1"></i>
-                          Editar
-                        </Button>
+                        <div className="d-flex gap-1">
+                          <Button 
+                            variant="outline-primary" 
+                            size="sm"
+                            onClick={() => {
+                              setSelectedAppointment(appointment);
+                              setShowViewModal(true);
+                            }}
+                            title="Ver detalles"
+                          >
+                            <i className="fas fa-eye"></i>
+                          </Button>
+                          <Button 
+                            variant="outline-success" 
+                            size="sm"
+                            onClick={() => {
+                              setSelectedAppointment(appointment);
+                              setFormData({
+                                customer: appointment.customer,
+                                phone: appointment.phone,
+                                email: appointment.email || '',
+                                vehicle: appointment.vehicle,
+                                service: appointment.service,
+                                date: appointment.date,
+                                time: appointment.time,
+                                notes: appointment.notes || ''
+                              });
+                              setShowEditModal(true);
+                            }}
+                            title="Editar cita"
+                          >
+                            <i className="fas fa-edit"></i>
+                          </Button>
+                          <Button 
+                            variant="outline-danger" 
+                            size="sm"
+                            onClick={() => handleDeleteAppointment(appointment.id)}
+                            title="Eliminar cita"
+                          >
+                            <i className="fas fa-trash"></i>
+                          </Button>
+                        </div>
                       </td>
                     </tr>
-                  ))}
+                    ))
+                  )}
                 </tbody>
               </Table>
             </Card.Body>
