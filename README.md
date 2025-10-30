@@ -35,7 +35,7 @@ Sistema web de gestión integral desarrollado para talleres mecánicos, implemen
 - Control de mecánicos y asignación de tareas
 - Registro de ingresos y movimientos financieros
 - Historial detallado de servicios por vehículo
-- Exportación de datos a formato Excel
+- **Exportación de datos a Excel (.xlsx)** con múltiples hojas y formato profesional
 
 ### Stack Tecnológico
 
@@ -49,6 +49,7 @@ Sistema web de gestión integral desarrollado para talleres mecánicos, implemen
 | Test Runner | Karma | 6.4.4 |
 | BDD Framework | Jasmine | 5.12.0 |
 | Build Tool | Create React App | 5.0.1 |
+| Exportación Excel | xlsx | 0.18.5+ |
 | Gestión de Estado | React Hooks | - |
 | Persistencia | LocalStorage API | - |
 
@@ -295,6 +296,43 @@ npm run test:coverage
 # Crear build de producción
 npm run build
 ```
+
+---
+
+## 📊 Exportación de Datos a Excel
+
+El sistema incluye funcionalidad completa de **exportación a Excel** para administradores, permitiendo generar reportes y backups de información en formato `.xlsx`.
+
+### Funcionalidades de Exportación
+
+| Módulo | Botón | Archivo Generado | Contenido |
+|--------|-------|------------------|-----------|
+| **Dashboard** | 📊 Exportar Todo | `AutoMax_Backup_Completo_YYYY-MM-DD.xlsx` | **4 hojas:** Citas, Carrito, Órdenes, Resumen |
+| **Citas** | 📥 Exportar Citas | `AutoMax_Citas_YYYY-MM-DD.xlsx` | Cliente, Email, Teléfono, Servicio, Fecha, Hora, Precio, Estado |
+| **Órdenes** | 📥 Exportar Órdenes | `AutoMax_Ordenes_YYYY-MM-DD.xlsx` | Orden #, Cliente, Vehículo, Servicio, Mecánico, Estado, Total |
+| **Carrito** | 📥 Exportar Carrito | `AutoMax_Carrito_YYYY-MM-DD.xlsx` | Servicios/Productos, Cantidad, Precio, Subtotal, TOTAL |
+
+### Características
+
+- ✅ Formato profesional con columnas ajustadas automáticamente
+- ✅ Precios en formato chileno ($XX.XXX)
+- ✅ Fechas en formato DD/MM/YYYY
+- ✅ Múltiples hojas en archivo de backup completo
+- ✅ Validación de datos antes de exportar
+- ✅ Notificaciones de éxito/error
+
+### Cómo Usar
+
+```javascript
+// Ejemplo: Exportar todas las citas
+import { exportAppointmentsToExcel } from './utils/excelExport';
+
+<Button onClick={exportAppointmentsToExcel}>
+  Exportar Citas
+</Button>
+```
+
+Para más detalles, consulta: **[GUIA_EXPORTACION_EXCEL.md](./GUIA_EXPORTACION_EXCEL.md)**
 
 ---
 

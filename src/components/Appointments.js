@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Container, Row, Col, Card, Button, Form, Table, Badge, Modal, Alert } from 'react-bootstrap';
+import { exportAppointmentsToExcel } from '../utils/excelExport';
 
 const Appointments = () => {
   const [showForm, setShowForm] = useState(false);
@@ -199,9 +200,18 @@ const Appointments = () => {
       )}
 
       <Row className="mb-4">
-        <Col className="text-end">
+        <Col className="d-flex justify-content-end gap-2">
+          <Button 
+            variant="success"
+            onClick={exportAppointmentsToExcel}
+            title="Exportar todas las citas a Excel"
+          >
+            <i className="fas fa-file-excel me-2"></i>
+            Exportar Citas
+          </Button>
           <Button variant="primary" onClick={() => setShowForm(true)}>
-            📅 Nueva Cita {cartItems.length > 0 && `(${cartItems.length} servicios)`}
+            <i className="fas fa-calendar-plus me-2"></i>
+            Nueva Cita {cartItems.length > 0 && `(${cartItems.length} servicios)`}
           </Button>
         </Col>
       </Row>

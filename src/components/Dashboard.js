@@ -1,5 +1,6 @@
 import React from 'react';
 import { Container, Row, Col, Card, Button } from 'react-bootstrap';
+import { exportAllDataToExcel } from '../utils/excelExport';
 
 const Dashboard = ({ onSectionChange }) => {
   const stats = [
@@ -63,13 +64,21 @@ const Dashboard = ({ onSectionChange }) => {
               <p className="text-muted mb-0">Resumen del taller mecánico AutoMax</p>
             </div>
             <div>
-              <Button variant="primary" className="me-2">
+              <Button 
+                variant="primary" 
+                className="me-2"
+                onClick={() => onSectionChange && onSectionChange('work-orders')}
+              >
                 <i className="fas fa-plus me-2"></i>
                 Nueva Orden
               </Button>
-              <Button variant="outline-primary">
-                <i className="fas fa-download me-2"></i>
-                Exportar
+              <Button 
+                variant="success"
+                onClick={exportAllDataToExcel}
+                title="Exportar todos los datos del sistema a Excel"
+              >
+                <i className="fas fa-file-excel me-2"></i>
+                Exportar Todo
               </Button>
             </div>
           </div>

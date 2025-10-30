@@ -1,5 +1,6 @@
 import React from 'react';
 import { Card, Button, Badge, Row, Col, Alert } from 'react-bootstrap';
+import { exportCartToExcel } from '../utils/excelExport';
 
 const ShoppingCart = ({ cartItems, onRemoveItem, onClearCart, onCheckout, isFloating = false }) => {
   const calculateTotal = () => {
@@ -130,6 +131,15 @@ const ShoppingCart = ({ cartItems, onRemoveItem, onClearCart, onCheckout, isFloa
             >
               <i className="fas fa-credit-card me-2"></i>
               Proceder al Pago
+            </Button>
+            <Button 
+              variant="info" 
+              size="sm"
+              onClick={exportCartToExcel}
+              className="mb-2"
+            >
+              <i className="fas fa-file-excel me-2"></i>
+              Exportar Carrito a Excel
             </Button>
             <Button 
               variant="outline-secondary" 

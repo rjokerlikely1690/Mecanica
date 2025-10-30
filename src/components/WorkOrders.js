@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Container, Row, Col, Card, Button, Table, Modal, Form } from 'react-bootstrap';
+import { exportWorkOrdersToExcel } from '../utils/excelExport';
 
 const WorkOrders = () => {
   const [showModal, setShowModal] = useState(false);
@@ -115,9 +116,20 @@ const WorkOrders = () => {
               <h2 className="text-primary mb-1">📋 Órdenes de Trabajo</h2>
               <p className="text-muted">Gestiona las órdenes de trabajo del taller</p>
             </div>
-            <Button variant="primary" onClick={() => setShowModal(true)}>
-              ➕ Nueva Orden
-            </Button>
+            <div className="d-flex gap-2">
+              <Button 
+                variant="success"
+                onClick={exportWorkOrdersToExcel}
+                title="Exportar todas las órdenes a Excel"
+              >
+                <i className="fas fa-file-excel me-2"></i>
+                Exportar Órdenes
+              </Button>
+              <Button variant="primary" onClick={() => setShowModal(true)}>
+                <i className="fas fa-plus me-2"></i>
+                Nueva Orden
+              </Button>
+            </div>
           </div>
         </Col>
       </Row>

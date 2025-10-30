@@ -2,9 +2,8 @@ import React, { useState } from 'react';
 import { Container, Row, Col, Card, Button, Table, Badge, Modal, Form, InputGroup } from 'react-bootstrap';
 
 const VehicleHistory = () => {
-  const [showModal, setShowModal] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
-  const [vehicles, setVehicles] = useState([
+  const [vehicles] = useState([
     {
       id: 1,
       plate: 'ABC-123',
